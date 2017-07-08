@@ -1,0 +1,61 @@
+h1, h2, p, strong, label{
+	color: white;
+}
+
+label{
+	font-size: 22px;
+}
+
+#page-title-container h1{
+	font-size: 42px;
+	text-align: center;
+}
+
+#page-title-container p{
+	font-size: 25px;
+}
+
+#main-container{
+	background-color: #ff6600;
+	text-align: center;
+}
+
+#result-container .result{
+	padding: 0px 10px;
+	border: 3px double white;
+	font-size: 22px;
+}
+
+#result-container{
+	padding-bottom: 30px;
+}
+
+#result-container h2{
+	font-size: 22px;
+}
+
+#bank-selector-container{
+	text-align: center;
+}
+
+.input[disabled]{
+	cursor: not-allowed;
+}
+
+.round-border{
+	border-radius: 15px;
+}
+
+#bank-selector{
+	width: 50%;
+    height: 50px;
+    padding-left: 20px;
+    font-size: 20px;
+    margin: 50px 0px;
+}
+
+@media(max-width: 767px){
+	#bank-selector{
+		width: 70%;
+	}
+}

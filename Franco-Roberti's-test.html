@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<!--
+	############################################################ 
+	#		Creado por Franco Roberti						   #
+	#		E-mail: franroberti95@gmail.com					   #
+	#		Tel: 15 6199-6820            					   #
+	############################################################
+	
+			consideraciones: 
+				La tasa de interes afecta mensualmente, por lo que hay que indicar tambien la cantidad de meses que se va a dejar el monto.
+				Uso de bootstrap permitido.
+				Uso de archivo JSON para obtener los datos de los bancos. Para el caso en que se quiera abrir el html sin necesidad de utilizar algun programa para hostear el sitio (local o online), tambien esta implementado sin archivo JSON. Basta con descomentar "bank_info" en la linea 26 a la 32 y populate banks en la linea 41 y, comentar desde la linea 43 a la 53 (para que no busque el JSON).
+-->
+
+<html>
+	<head>
+		<title>Simulador de intereses</title>
+
+		  <meta charset="utf-8">
+		  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+		  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		  <link rel="stylesheet" href="css/style.css">
+		  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		  <script src="scripts/bank-interest.js"></script>
+		  <script src="scripts/utilities.js"></script>
+		  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		  
+	</head>
+	<body>
+
+		<script type="text/javascript">
+
+			$( document ).ready(function() {
+				/*var bank_info = {	
+									"Santander": 10,
+							     	"Galicia":5,
+	 						     	"Macro": 20,
+							     	"Ciudad": 4
+							    }
+				*/
+				var bank_selector = $("#bank-selector");
+				var final_mount = $("#final-mount");
+				var percent_difference = $("#percent-difference");
+				var month_quantity = $("#month-input");
+				var mount_quantity = $("#mount-input");
+				var results = [final_mount,percent_difference];
+
+				//populate banks selector on load
+				//populate_banks(bank_info,bank_selector);
+
+				var bank_info = {};
+				$.getJSON( "JSON/banks.json", function() {	  		
+
+				})
+				.fail( function(d, textStatus, error) {
+				    console.error("getJSON failed, status: " + textStatus + ", error: "+error)
+				})
+				.done(function(data){
+					var bank_info = data;
+					populate_banks(bank_info,bank_selector);
+				});
+
+				//lock inputs on load
+				lock_list([month_quantity,mount_quantity]);
+
+				$(mount_quantity).change(function() {
+					empty_list(results);
+					update_results(mount_quantity,month_quantity,bank_selector,final_mount,percent_difference);
+				});
+
+				$(month_quantity).change(function(){
+					empty_list(results);
+					update_results(mount_quantity,month_quantity,bank_selector,final_mount,percent_difference);
+				});
+
+				$(bank_selector).change(function(){
+					var selectors = [month_quantity,mount_quantity];
+
+					if($(this).val()){
+						unlock_list(selectors);
+					} else{
+						lock_list(selectors);
+						empty_list(selectors,"selector");
+						empty_list(results);
+						return;
+					}
+
+					update_results(mount_quantity,month_quantity,bank_selector,final_mount,percent_difference);
+				});
+
+			});
+			
+		
+		</script>
+
+		<div id="main-container" class="container-fluid">
+
+			<div id="page-title-container" class="row">
+				<div class="col-xs-12">
+					<h1>Simulador de intereses</h1>
+					<p>Seleccione un banco, el monto a depositar y la cantidad de meses que desea depositar.</p>
+				</div>
+			</div>
+
+
+			<div id="bank-selector-container" class="row">
+				<div class="col-xs-12">
+					<select class="round-border" id="bank-selector">
+			  			<option value="">Seleccione un banco</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="row">
+					<div class="col-xs-6 col-md-3 col-md-offset-3">
+						<label for="monto">Monto</label>
+					</div>
+					
+					<div class="col-xs-6 col-md-3">
+						<label for="months">Meses</label>
+					</div>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-6 col-md-3 col-md-offset-3">
+					<input class="round-border input form-control" id="mount-input" type="number" name="monto">
+				</div>
+				<div class="col-xs-6 col-md-3">
+					<input  class="round-border input form-control" id="month-input" type="number" name="month">
+				</div>
+			</div>
+
+			<div id="result-container" class="row">
+				<div class="col-xs-6 col-md-3 col-md-offset-3">
+					<h2>Monto final</h2> 
+					<strong class="result" id="final-mount"></strong>
+				</div>
+				<div class="col-xs-6 col-md-3">
+					<h2>Diferencia porcentual</h2>
+					<strong class="result" id="percent-difference"></strong>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
